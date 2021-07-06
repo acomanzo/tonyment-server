@@ -1,0 +1,47 @@
+enum Status {
+    NOT_STARTED
+    IN_PROGRESS
+    FINISHED
+}
+
+type User {
+    id: ID!
+    email: String!
+    password: String!
+
+    "The player's tag"
+    tag: String!
+
+    tournies_participated: [Tourney!]! @relationship(type: "ENTERED", direction: OUT)
+    sets: [Set!]! @relationship(type: "PLAYED", direction: OUT)
+}
+
+type Set {
+    id: ID!
+    # player_a: User!
+    # player_b: User!
+    status: Status!
+
+    "The record of the set. E.g.: 3-2"
+    record: String!
+
+    winner: User
+    competitors: [User!]! @relationship(type: "PLAYED", direction: IN)
+}
+
+type Bracket {
+    id: ID!
+    sets: [Set!]!
+    winner: User
+}
+
+type Tourney {
+    id: ID!
+    name: String!
+    date: String!
+    time: String!
+    status: Status!
+    winner: User
+    bracket: [Bracket!]!
+    competitors: [User!]! @relationship(type: "ENTERED", direction: IN)
+}
