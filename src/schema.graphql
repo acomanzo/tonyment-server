@@ -5,43 +5,52 @@ enum Status {
 }
 
 type User {
-    id: ID!
+    id: ID! @id
     email: String!
     password: String!
 
     "The player's tag"
     tag: String!
 
-    tournies_participated: [Tourney!]! @relationship(type: "ENTERED", direction: OUT)
-    sets: [Set!]! @relationship(type: "PLAYED", direction: OUT)
+    sets_won: [Set!] @relationship(type: "WON", direction: OUT)
+    "Sets that the user played in"
+    sets_played: [Set!] @relationship(type: "PLAYED", direction: OUT)
+
+    brackets_won: [Bracket!] @relationship(type: "WON", direction: OUT)
+
+    tournies_won: [Tourney!] @relationship(type: "WON", direction: OUT)
+    tournies_entered: [Tourney!] @relationship(type: "ENTERED", direction: OUT)
 }
 
 type Set {
-    id: ID!
-    # player_a: User!
-    # player_b: User!
+    id: ID! @id
     status: Status!
 
-    "The record of the set. E.g.: 3-2"
-    record: String!
+    """
+    The record of the set.
+    E.g.: 3-2: 
+    The set was a best of 5, the winner won thrice, the loser lost twice
+    """
+    record: String
 
-    winner: User
-    competitors: [User!]! @relationship(type: "PLAYED", direction: IN)
+    winner: User @relationship(type: "WON", direction: IN)
+    competitors: [User!] @relationship(type: "PLAYED", direction: IN)
 }
 
 type Bracket {
-    id: ID!
-    sets: [Set!]!
-    winner: User
+    id: ID! @id
+    name: String!
+    sets: [Set!] 
+    winner: User @relationship(type: "WON", direction: IN)
 }
 
 type Tourney {
-    id: ID!
+    id: ID! @id
     name: String!
     date: String!
     time: String!
     status: Status!
-    winner: User
-    bracket: [Bracket!]!
-    competitors: [User!]! @relationship(type: "ENTERED", direction: IN)
+    winner: User @relationship(type: "WON", direction: IN)
+    bracket: [Bracket!]
+    competitors: [User!] @relationship(type: "ENTERED", direction: IN)
 }
