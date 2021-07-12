@@ -19,6 +19,7 @@ type User {
 
     tournies_won: [Tourney!] @relationship(type: "WON", direction: OUT)
     tournies_entered: [Tourney!] @relationship(type: "ENTERED", direction: OUT)
+    tournies_organized: [Tourney!] @relationship(type: "ORGANIZED", direction: OUT)
 }
 
 type Set {
@@ -52,4 +53,5 @@ type Tourney {
     winner: User @relationship(type: "WON", direction: IN)
     bracket: [Bracket!]
     competitors: [User!] @relationship(type: "ENTERED", direction: IN)
+    organizer: User! @relationship(type: "ORGANIZED", direction: IN)
 }
