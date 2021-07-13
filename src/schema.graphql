@@ -1,5 +1,6 @@
 enum Status {
     NOT_STARTED
+    REGISTRATION_CLOSED
     IN_PROGRESS
     FINISHED
 }
@@ -20,6 +21,9 @@ type User {
     tournies_won: [Tourney!] @relationship(type: "WON", direction: OUT)
     tournies_entered: [Tourney!] @relationship(type: "ENTERED", direction: OUT)
     tournies_organized: [Tourney!] @relationship(type: "ORGANIZED", direction: OUT)
+
+    created_at: DateTime! @timestamp(operations: [CREATE])
+    updated_at: DateTime! @timestamp(operations: [UPDATE])
 }
 
 type Set {
@@ -35,13 +39,34 @@ type Set {
 
     winner: User @relationship(type: "WON", direction: IN)
     competitors: [User!] @relationship(type: "PLAYED", direction: IN)
+
+    round: Round @relationship(type: "HAS_SETS", direction: IN)
+
+    created_at: DateTime! @timestamp(operations: [CREATE])
+    updated_at: DateTime! @timestamp(operations: [UPDATE])
+}
+
+type Round {
+    id: ID! @id 
+    name: String!
+    status: Status! 
+    bracket: Bracket @relationship(type: "HAS_ROUNDS", direction: IN)
+    sets: [Set!] @relationship(type: "HAS_SETS", direction: OUT)
+
+    created_at: DateTime! @timestamp(operations: [CREATE])
+    updated_at: DateTime! @timestamp(operations: [UPDATE])
 }
 
 type Bracket {
     id: ID! @id
     name: String!
-    sets: [Set!] 
     winner: User @relationship(type: "WON", direction: IN)
+    tourney: Tourney @relationship(type: "HAS_BRACKETS", direction: IN)
+    rounds: [Round!]! @relationship(type: "HAS_ROUNDS", direction: OUT)
+    isFinalized: Boolean!
+
+    created_at: DateTime! @timestamp(operations: [CREATE])
+    updated_at: DateTime! @timestamp(operations: [UPDATE])
 }
 
 type Tourney {
@@ -51,7 +76,14 @@ type Tourney {
     time: String!
     status: Status!
     winner: User @relationship(type: "WON", direction: IN)
-    bracket: [Bracket!]
+    bracket: [Bracket!] @relationship(type: "HAS_BRACKETS", direction: OUT)
     competitors: [User!] @relationship(type: "ENTERED", direction: IN)
     organizer: User! @relationship(type: "ORGANIZED", direction: IN)
+
+    created_at: DateTime! @timestamp(operations: [CREATE])
+    updated_at: DateTime! @timestamp(operations: [UPDATE])
+}
+
+type Mutation {
+    seedBracket(tourneyId: ID!, bracketId: ID!): String!
 }
