@@ -12,9 +12,9 @@ type User {
     "The player's tag"
     tag: String!
 
-    sets_won: [Set!] @relationship(type: "WON", direction: OUT)
+    sets_won: [TSet!] @relationship(type: "WON", direction: OUT)
     "Sets that the user played in"
-    sets_played: [Set!] @relationship(type: "PLAYED", direction: OUT)
+    sets_played: [TSet!] @relationship(type: "PLAYED", direction: OUT)
 
     brackets_won: [Bracket!] @relationship(type: "WON", direction: OUT)
 
@@ -26,7 +26,7 @@ type User {
     updated_at: DateTime! @timestamp(operations: [UPDATE])
 }
 
-type Set {
+type TSet {
     id: ID! @id
     status: Status!
 
@@ -51,7 +51,7 @@ type Round {
     name: String!
     status: Status! 
     bracket: Bracket @relationship(type: "HAS_ROUNDS", direction: IN)
-    sets: [Set!] @relationship(type: "HAS_SETS", direction: OUT)
+    sets: [TSet!] @relationship(type: "HAS_SETS", direction: OUT)
 
     created_at: DateTime! @timestamp(operations: [CREATE])
     updated_at: DateTime! @timestamp(operations: [UPDATE])
@@ -82,8 +82,4 @@ type Tourney {
 
     created_at: DateTime! @timestamp(operations: [CREATE])
     updated_at: DateTime! @timestamp(operations: [UPDATE])
-}
-
-type Mutation {
-    seedBracket(tourneyId: ID!, bracketId: ID!): String!
 }
