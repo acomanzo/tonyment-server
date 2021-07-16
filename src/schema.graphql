@@ -40,6 +40,12 @@ type TSet {
     winner: User @relationship(type: "WON", direction: IN)
     competitors: [User!] @relationship(type: "PLAYED", direction: IN)
 
+    # The sets that the winner and loser will go to in the next round 
+    competitors_progress_to: [TSet!] @relationship(type: "COMPETITORS_PROGRESS_TO", direction: OUT)
+    
+    # Which sets the competitors came from
+    competitors_progressed_from: [TSet!] @relationship(type: "COMPETITORS_PROGRESS_TO", direction: IN)
+
     round: Round @relationship(type: "HAS_SETS", direction: IN)
 
     created_at: DateTime! @timestamp(operations: [CREATE])
