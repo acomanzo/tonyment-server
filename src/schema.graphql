@@ -13,6 +13,7 @@ type User {
     tag: String!
 
     sets_won: [TSet!] @relationship(type: "WON", direction: OUT)
+    
     "Sets that the user played in"
     sets_played: [TSet!] @relationship(type: "PLAYED", direction: OUT)
 
