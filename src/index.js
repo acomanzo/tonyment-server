@@ -2,10 +2,13 @@ const { Neo4jGraphQL } = require("@neo4j/graphql");
 const neo4j = require("neo4j-driver");
 const { ApolloServer } = require("apollo-server");
 const typeDefs = require('./graphql-schema');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const driver = neo4j.driver(
-    "bolt://localhost:7687", 
-    neo4j.auth.basic("neo4j", "letmein")
+    process.env.AURA_ENDPOINT, 
+    neo4j.auth.basic(process.env.AURA_USERNAME, process.env.AURA_PASSWORD)
 );
 
 const neoSchema = new Neo4jGraphQL({ typeDefs, driver });
